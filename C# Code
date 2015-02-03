@@ -1,0 +1,80 @@
+Add Reference Interop.hMailServer.dll to project
+
+public class hMailAcountImplement {
+
+	private void hMailAccount_Create()
+	{
+		// http://stackoverflow.com/questions/7419594/converting-vbs-code-to-c-sharp
+		// MinChanSike Test @2FEB2015
+        var app = new hMailServer.Application();
+		// Authenticate. Without doing this, we won't have permission
+		// to change any server settings or add any objects to the
+		// installation.   
+        app.Authenticate("Administrator", "AdminPassword");
+		// Locate the domain we want to add the account to
+        var domain = app.Domains.get_ItemByName("yourdomain.com");
+		var account = domain.Accounts.Add();
+
+		// Set the account properties
+        account.Address = "username@yourdomain.com";
+		account.Password = "emailpassword";
+		account.Active = true;
+		account.MaxSize = 100; // Allow max 100 megabytes
+        account.Save();
+	}
+	private void hMailAccount_Update()
+	{
+		var app = new hMailServer.Application();
+		// Authenticate. Without doing this, we won't have permission             
+        app.Authenticate("Administrator", "AdminPassword");
+		// Locate the domain we want to add the account to
+        var domain = app.Domains.get_ItemByName("yourdomain.com");
+		var account = new hMailServer.Account();
+		try
+		{
+            account = domain.Accounts.get_ItemByAddress("oldaccount@yourdomain.com");
+            account.Address = "newaccount@yourdomain.com";
+			account.Password = "newemailpassword";
+            account.Save();
+        }
+        catch (Exception ex)
+        {
+            //there are no old-account that u given to update
+        }
+
+    }
+    private void hMailAccount_Delete()
+    {
+        var app = new hMailServer.Application();
+        // Authenticate. Without doing this, we won't have permission             
+        app.Authenticate("Administrator", "AdminPassword");
+        // Locate the domain we want to add the account to
+        var domain = app.Domains.get_ItemByName("yourdomain.com");
+        var account = new hMailServer.Account();
+        try
+        {
+            account = domain.Accounts.get_ItemByAddress("deleteaccount@yourdomain.com");
+            account.Delete();
+        }
+        catch (Exception ex)
+        {
+            //there are account that u given to delete
+        }
+    }
+    private List<string> hMailAccount_Users()
+    {
+        List<string> Users = new List<string>();
+        var app = new hMailServer.Application();
+        // Authenticate. Without doing this, we won't have permission             
+        app.Authenticate("Administrator", "AdminPassword");
+        // Locate the domain we want to add the account to
+        var domain = app.Domains.get_ItemByName("yourdomain.com");
+        var account = new hMailServer.Account();
+        for (int i = 0; i < domain.Accounts.Count; i++)
+        {
+            account = domain.Accounts[i];
+            Users.Add(account.Address.ToString());
+        }
+        return Users;
+    }
+}
