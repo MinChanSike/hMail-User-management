@@ -4,7 +4,6 @@ public class hMailAcountImplement {
 
 	private void hMailAccount_Create()
 	{
-		// http://stackoverflow.com/questions/7419594/converting-vbs-code-to-c-sharp
 		// MinChanSike Test @2FEB2015
         var app = new hMailServer.Application();
 		// Authenticate. Without doing this, we won't have permission
